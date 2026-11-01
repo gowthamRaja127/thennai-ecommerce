@@ -33,15 +33,15 @@ const PRESS = [
 
 export function Standards() {
   return (
-    <section id="standards" className="bg-[#FAF9F5] py-24 lg:py-36">
+    <section id="standards" className="bg-[#FAF9F5] pt-4 pb-16 lg:pt-6 lg:pb-24">
       <div className="mx-auto max-w-[1360px] px-5 sm:px-8">
 
         {/* Press logos */}
-        <div className="text-center mb-20 lg:mb-28">
-          <h2 data-reveal className="font-serif text-[32px] text-[#1A2421] sm:text-[44px]">
-            Loved by Mindful Homes & Press
+        <div className="text-center mb-14 lg:mb-18">
+          <h2 data-reveal className="font-serif text-[30px] text-[#1A2421] sm:text-[40px]">
+            Loved by Mindful Homes &amp; Press
           </h2>
-          <div data-reveal style={delay(150)} className="mt-12 grid grid-cols-4 gap-3 sm:grid-cols-8 lg:grid-cols-4 xl:grid-cols-8">
+          <div data-reveal style={delay(150)} className="mt-8 grid grid-cols-4 gap-3 sm:grid-cols-8 lg:grid-cols-4 xl:grid-cols-8">
             {PRESS.map((name, i) => (
               <div
                 key={name}
@@ -90,3 +90,4 @@ export function Standards() {
     </section>
   );
 }
+

@@ -14,7 +14,7 @@ interface CatalogProps {
 
 export function Catalog({ tinVariant, onTinVariantChange }: CatalogProps) {
   return (
-    <section id="shop" className="overflow-hidden bg-[#FAF9F5] pb-24 lg:pb-36">
+    <section id="shop" className="overflow-hidden bg-[#FAF9F5] pb-10 lg:pb-12">
       <div className="mx-auto max-w-[1360px] px-5 sm:px-8">
         {/* Section header */}
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
@@ -30,7 +30,7 @@ export function Catalog({ tinVariant, onTinVariantChange }: CatalogProps) {
         </div>
 
         {/* Product cards — stacked vertically with generous spacing */}
-        <div className="mt-20 space-y-20 lg:mt-28 lg:space-y-28">
+        <div className="mt-14 space-y-12 lg:mt-16 lg:space-y-16">
 
           {/* Card A — Sage / Matcha */}
           <PillCard
@@ -52,16 +52,16 @@ export function Catalog({ tinVariant, onTinVariantChange }: CatalogProps) {
             variantPicker={
               <label className="block">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6B726F]">Seed variant</span>
-                <span className="relative mt-2 block">
+                <div className="relative mt-2">
                   <select
                     value={tinVariant}
                     onChange={(e) => onTinVariantChange(e.target.value as SeedVariant)}
-                    className="w-full cursor-pointer appearance-none rounded-full border border-[#EBE6DC] bg-[#FAF9F5] py-2.5 pl-4 pr-10 text-sm font-medium text-[#1A2421] transition-colors hover:border-[#597E52] focus:border-[#597E52] focus:outline-none"
+                    className="w-full cursor-pointer appearance-none rounded-xl border border-[#EBE6DC] bg-white py-2.5 pl-4 pr-10 text-sm font-medium text-[#1A2421] shadow-xs transition hover:border-[#597E52] focus:border-[#597E52] focus:ring-2 focus:ring-[#597E52]/15 focus:outline-none"
                   >
-                    {SEED_VARIANTS.map((v) => <option key={v}>{v}</option>)}
+                    {SEED_VARIANTS.map((v) => <option key={v} value={v}>{v}</option>)}
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6B726F]" />
-                </span>
+                </div>
               </label>
             }
           />
@@ -207,3 +207,4 @@ function PillCard({ product, variant, media, outerBg, innerBg, accentBg, accentT
     </article>
   );
 }
+

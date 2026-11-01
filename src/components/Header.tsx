@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { Menu, Search, ShoppingBag, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { CURRENCY_CODES, useCurrency, type CurrencyCode } from '../context/CurrencyContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { CATALOG, PRODUCTS } from '../data/products';
 
 const NAV = [
@@ -19,11 +19,8 @@ const SEARCH_EXTRAS = [
   { label: 'Wholesale & corporate gifting', href: '#help' },
 ];
 
-const CURRENCY_LABEL: Record<CurrencyCode, string> = { INR: 'INR ₹', USD: 'USD $', AED: 'AED', GBP: 'GBP £' };
-
 export function Header() {
   const { itemCount, open } = useCart();
-  const { currency, setCurrency } = useCurrency();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [bump, setBump] = useState(false);
@@ -91,20 +88,6 @@ export function Header() {
               <Search className="size-[18px]" />
             </button>
 
-            <label className="relative hidden items-center sm:flex">
-              <span className="sr-only">Display currency</span>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                className="cursor-pointer appearance-none bg-transparent py-2 pl-2 pr-6 text-[11px] font-semibold tracking-[0.1em] text-[#1A2421] transition-colors hover:text-[#597E52] focus:outline-none"
-              >
-                {CURRENCY_CODES.map((c) => (
-                  <option key={c} value={c}>{CURRENCY_LABEL[c]}</option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-1 size-3.5 text-[#6B726F]" />
-            </label>
-
             <button
               type="button"
               onClick={open}
@@ -134,18 +117,6 @@ export function Header() {
                 {n.label}
               </a>
             ))}
-            <label className="mt-4 flex items-center justify-between text-sm text-[#6B726F]">
-              Display currency
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                className="rounded-full border border-[#EBE6DC] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A2421]"
-              >
-                {CURRENCY_CODES.map((c) => (
-                  <option key={c} value={c}>{CURRENCY_LABEL[c]}</option>
-                ))}
-              </select>
-            </label>
           </nav>
         )}
       </header>
@@ -231,3 +202,4 @@ export function Logomark({ className = '' }: { className?: string }) {
     </svg>
   );
 }
+

@@ -15,10 +15,8 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 const CHAPTERS = [
-  { at: 0, end: 0.14, kicker: 'Unbox', short: 'Open', title: 'Open the tin', body: 'One seamless alloy tin holds everything: three coir coins, a seed packet and a wooden marker. No tools, no tray.' },
-  { at: 0.14, end: 0.44, kicker: 'Step 1', short: 'Hydrate', title: 'Drop & Hydrate', body: 'Place 1 dry coin in the tin. Pour 5 tablespoons of tap water.' },
-  { at: 0.44, end: 0.62, kicker: 'Step 1, continued', short: 'Expand', title: 'Watch it rise 7×', body: 'The compressed Muthur coir drinks the water and expands 7× in 60 seconds into airy, root-safe substrate.' },
-  { at: 0.62, end: 0.74, kicker: 'Step 2', short: 'Sow', title: 'Sow & Tuck', body: 'Sprinkle 3–4 seeds into the airy, root-safe coir substrate and gently cover.' },
+  { at: 0, end: 0.44, kicker: 'Step 1', short: 'Hydrate', title: 'Drop & Hydrate', body: 'Place 1 dry coin in the tin. Pour 5 tablespoons of tap water and watch it expand 7× into airy substrate.' },
+  { at: 0.44, end: 0.74, kicker: 'Step 2', short: 'Sow', title: 'Sow & Tuck', body: 'Sprinkle 3–4 seeds into the airy, root-safe coir substrate and gently cover.' },
   { at: 0.74, end: 1.01, kicker: 'Step 3', short: 'Harvest', title: 'Harvest on Your Sill', body: 'Place under indirect natural light. Sprouting occurs in 4–6 days with zero water leakage.' },
 ];
 
@@ -96,7 +94,7 @@ export function ScrollStory() {
               ))}
             </div>
 
-            <ol className="mt-4 grid grid-cols-5 gap-2.5 lg:mt-12 lg:gap-4">
+            <ol className="mt-4 grid grid-cols-3 gap-2.5 lg:mt-12 lg:gap-4">
               {CHAPTERS.map((c, i) => (
                 <li key={c.title}>
                   <button type="button" onClick={() => jump(i)} className="group block w-full text-left" aria-label={`Go to ${c.title}`}>
@@ -111,7 +109,7 @@ export function ScrollStory() {
               ))}
             </ol>
             <p className="mt-6 hidden items-center gap-3 text-[11px] tracking-[0.2em] text-linen/40 lg:flex">
-              <span className="font-serif text-[15px] italic tracking-normal text-linen/80">0{active + 1}</span>/ 05
+              <span className="font-serif text-[15px] italic tracking-normal text-linen/80">0{active + 1}</span>/ 03
               <span className="h-px w-10 bg-linen/20" />
               {p < 0.02 ? 'Scroll to begin' : p > 0.97 ? 'Ready to grow' : 'Keep scrolling'}
             </p>
@@ -357,3 +355,4 @@ function rotatePoint(x: number, y: number, deg: number) {
   const r = (deg * Math.PI) / 180;
   return { x: x * Math.cos(r) - y * Math.sin(r), y: x * Math.sin(r) + y * Math.cos(r) };
 }
+

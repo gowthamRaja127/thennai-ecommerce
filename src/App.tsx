@@ -3,7 +3,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ScrollStory } from './components/ScrollStory';
 import { Marquee } from './components/Marquee';
-import { About } from './components/About';
+// import { About } from './components/About';
 import { Catalog } from './components/Catalog';
 import { Standards } from './components/Standards';
 import { Testimonial } from './components/Testimonial';
@@ -23,7 +23,7 @@ export default function App() {
         <Hero />
         <Marquee />
         <ScrollStory />
-        <About />
+        {/* <About /> */}
         <Catalog tinVariant={tinVariant} onTinVariantChange={setTinVariant} />
         <Standards />
         <Testimonial />
