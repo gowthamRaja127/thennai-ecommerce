@@ -1,12 +1,13 @@
 import { Mail, MapPin, Share2, AtSign } from 'lucide-react';
+import { Link } from 'react-router';
 import { PaymentMarks } from './PaymentMarks';
 import { Logomark } from './Header';
 
-const LINKS = {
-  Support: ['FAQ', 'Shipping Policy', 'Returns', 'Contact Us'],
-  Philosophy: ['Our Roots', 'Low-EC Standard', 'Circular Packaging', 'Erode Mills'],
-  Products: ['The Grow Tin', 'Living Soil Kit', 'Kitchen Trio', 'Coin Refill'],
-  Connect: ['Instagram', 'Pinterest', 'Press Kit', 'Wholesale'],
+const LINKS: Record<string, [label: string, to: string][]> = {
+  Support: [['FAQ', '#'], ['Shipping Policy', '#'], ['Returns', '#'], ['Contact Us', 'mailto:hello@thennai.in']],
+  Philosophy: [['Our Roots', '/#about'], ['Low-EC Standard', '/#standards'], ['How it works', '/#how-it-works'], ['Journal', '/#journal']],
+  Shop: [['All products', '/shop'], ['The Grow Tin', '/shop/grow-tin'], ['Living Soil Kit', '/shop/living-soil-kit'], ['Kitchen Trio', '/shop/kitchen-trio'], ['Your cart', '/cart']],
+  Connect: [['Instagram', '#'], ['Pinterest', '#'], ['Wholesale', 'mailto:hello@thennai.in?subject=Wholesale']],
 };
 
 const SOCIAL_ICONS = [Share2, AtSign];
@@ -52,9 +53,13 @@ export function Footer() {
           <div key={section} className="lg:col-span-2">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-linen/40">{section}</p>
             <ul className="mt-5 space-y-3 text-[13.5px]">
-              {items.map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-linen/60 transition hover:text-linen">{item}</a>
+              {items.map(([label, to]) => (
+                <li key={label}>
+                  {to.startsWith('/') ? (
+                    <Link to={to} className="text-linen/60 transition hover:text-linen">{label}</Link>
+                  ) : (
+                    <a href={to} className="text-linen/60 transition hover:text-linen">{label}</a>
+                  )}
                 </li>
               ))}
             </ul>

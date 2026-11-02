@@ -9,7 +9,7 @@ export function initMotion() {
   document.documentElement.classList.add('js');
 
   if (!reduce) {
-    lenis = new Lenis({ lerp: 0.09, anchors: { offset: -100 } });
+    lenis = new Lenis({ lerp: 0.09 });
     const raf = (t: number) => {
       lenis?.raf(t);
       requestAnimationFrame(raf);
@@ -52,6 +52,21 @@ export function initMotion() {
 export function scrollToY(y: number) {
   if (lenis) lenis.scrollTo(y, { duration: 1.4 });
   else window.scrollTo({ top: y, behavior: 'auto' });
+}
+
+/** Jump to the top without animation (used on route changes). */
+export function scrollToTopNow() {
+  if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+  else window.scrollTo(0, 0);
+}
+
+/** Smooth-scroll to an element by id, allowing for the sticky header. */
+export function scrollToId(id: string, immediate = false) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  if (lenis) lenis.scrollTo(el, { offset: -100, immediate, force: true });
+  else el.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth' });
+  return true;
 }
 
 export function setScrollLocked(locked: boolean) {

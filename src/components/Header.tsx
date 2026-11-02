@@ -2,21 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { Menu, Search, ShoppingBag, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
-import { CATALOG, PRODUCTS } from '../data/products';
+import { Link, NavLink, useLocation } from 'react-router';
+import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from './ProductImage';
 
 const NAV = [
-  { label: 'Home', href: '#top' },
-  { label: 'Varieties', href: '#shop' },
-  { label: 'Living Coir', href: '#living-soil-kit' },
-  { label: 'Journal', href: '#journal' },
-  { label: 'Our Roots', href: '#about' },
+  { label: 'Shop', to: '/shop' },
+  { label: 'Grow Tins', to: '/shop?category=grow-tins' },
+  { label: 'Living Soil', to: '/shop?category=soil' },
+  { label: 'How it works', to: '/#how-it-works' },
+  { label: 'Journal', to: '/#journal' },
 ];
 
 const SEARCH_EXTRAS = [
-  { label: 'How it works — Drop, Sow, Harvest', href: '#how-it-works' },
-  { label: 'Low-EC lab standard (<0.5 mS/cm)', href: '#standards' },
-  { label: 'Shipping policy & delivery times', href: '#help' },
-  { label: 'Wholesale & corporate gifting', href: '#help' },
+  { label: 'How it works — Drop, Sow, Harvest', to: '/#how-it-works' },
+  { label: 'Low-EC lab standard (<0.5 mS/cm)', to: '/#standards' },
+  { label: 'Browse the full shop', to: '/shop' },
 ];
 
 export function Header() {
@@ -25,6 +26,10 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [bump, setBump] = useState(false);
   const prevCount = useRef(itemCount);
+  const location = useLocation();
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => setMenuOpen(false), [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     if (itemCount > prevCount.current) {
@@ -57,24 +62,29 @@ export function Header() {
             >
               {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
-            <a href="#top" className="group flex items-center gap-2.5 leading-none" aria-label="thennai home">
+            <Link to="/" className="group flex items-center gap-2.5 leading-none" aria-label="thennai home">
               <Logomark className="size-7 text-pine transition-transform duration-700 group-hover:rotate-[-8deg]" />
               <span className="flex flex-col">
                 <span className="font-serif text-[28px] font-normal italic leading-none tracking-[-0.01em] text-espresso">Thennai</span>
                 <span className="mt-1 text-[8px] font-semibold uppercase tracking-[0.32em] text-kraft-deep">Estd. Erode</span>
               </span>
-            </a>
+            </Link>
           </div>
 
           <nav aria-label="Primary" className="hidden items-center gap-9 text-[11px] font-semibold uppercase tracking-[0.2em] text-espresso/70 lg:flex">
             {NAV.map((n) => (
-              <a
-                key={n.href}
-                href={n.href}
-                className="relative py-1 transition-colors hover:text-pine after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-pine after:transition-transform hover:after:scale-x-100"
+              <NavLink
+                key={n.to}
+                to={n.to}
+                end
+                className={({ isActive }) =>
+                  `relative py-1 transition-colors hover:text-pine after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-pine after:transition-transform hover:after:scale-x-100 ${
+                    isActive && n.to === '/shop' && !location.search ? 'text-espresso after:scale-x-100' : 'after:scale-x-0'
+                  }`
+                }
               >
                 {n.label}
-              </a>
+              </NavLink>
             ))}
           </nav>
 
@@ -108,15 +118,13 @@ export function Header() {
         {menuOpen && (
           <nav aria-label="Mobile" className="animate-fade border-t border-line bg-linen px-4 pb-5 pt-2 lg:hidden">
             {NAV.map((n) => (
-              <a
-                key={n.href}
-                href={n.href}
-                onClick={() => setMenuOpen(false)}
-                className="block border-b border-line py-3.5 font-serif text-lg text-espresso"
-              >
+              <Link key={n.to} to={n.to} className="block border-b border-line py-3.5 font-serif text-xl text-espresso">
                 {n.label}
-              </a>
+              </Link>
             ))}
+            <Link to="/cart" className="block py-3.5 font-serif text-xl text-espresso">
+              Your cart ({itemCount})
+            </Link>
           </nav>
         )}
       </header>
@@ -138,16 +146,17 @@ function SearchOverlay({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
+  const { products: all } = useCatalog();
   const term = q.trim().toLowerCase();
-  const products = CATALOG.map((id) => PRODUCTS[id]).filter(
-    (p) => !term || [p.name, p.tagline, p.badge, ...p.contents].join(' ').toLowerCase().includes(term),
+  const products = all.filter(
+    (p) => !term || [p.name, p.tagline, p.badge, p.category, ...p.contents, ...p.variants].join(' ').toLowerCase().includes(term),
   );
   const extras = SEARCH_EXTRAS.filter((x) => !term || x.label.toLowerCase().includes(term));
 
   return (
     <div className="fixed inset-0 z-50 animate-fade" role="dialog" aria-modal="true" aria-label="Search the store">
       <div className="absolute inset-0 bg-espresso/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative mx-auto mt-4 w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-2xl border border-line bg-white shadow-2xl sm:mt-24">
+      <div className="relative mx-auto mt-4 w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-[3px] border border-line bg-linen shadow-2xl sm:mt-24">
         <div className="flex items-center gap-3 border-b border-line px-4">
           <Search className="size-5 text-umber" />
           <input
@@ -167,19 +176,22 @@ function SearchOverlay({ onClose }: { onClose: () => void }) {
           )}
           {products.length > 0 && <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-widest text-kraft">Products</p>}
           {products.map((p) => (
-            <a key={p.id} href={`#${p.id}`} onClick={onClose} className="flex items-center justify-between gap-4 rounded-xl px-3 py-3 hover:bg-sand">
-              <span>
-                <span className="block font-serif text-[15px] text-espresso">{p.name}</span>
-                <span className="block text-xs text-umber">{p.tagline}</span>
+            <Link key={p.id} to={`/shop/${p.id}`} onClick={onClose} className="flex items-center gap-4 rounded-[2px] px-3 py-3 hover:bg-sand">
+              <span className="size-12 shrink-0 overflow-hidden rounded-[2px] bg-paper">
+                <ProductImage product={p} />
               </span>
-              <span className="shrink-0 text-sm font-semibold text-pine">{format(p.price)}</span>
-            </a>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-serif text-[17px] text-espresso">{p.name}</span>
+                <span className="block truncate text-xs text-umber">{p.tagline}</span>
+              </span>
+              <span className="shrink-0 text-sm text-espresso">{format(p.price)}</span>
+            </Link>
           ))}
           {extras.length > 0 && <p className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-widest text-kraft">Guides & help</p>}
           {extras.map((x) => (
-            <a key={x.label} href={x.href} onClick={onClose} className="block rounded-xl px-3 py-2.5 text-sm text-espresso hover:bg-sand">
+            <Link key={x.label} to={x.to} onClick={onClose} className="block rounded-[2px] px-3 py-2.5 text-sm text-espresso hover:bg-sand">
               {x.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

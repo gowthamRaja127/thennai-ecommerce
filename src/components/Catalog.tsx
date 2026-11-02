@@ -1,10 +1,13 @@
 import { useState, type ReactNode } from 'react';
-import { ArrowRight, Check, ChevronDown, Minus, Plus } from 'lucide-react';
+import { ArrowRight, Check, Minus, Plus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
-import { PRODUCTS, SEED_VARIANTS, type Product, type SeedVariant } from '../data/products';
-import { TrioArt } from './Illustrations';
+import { Link } from 'react-router';
+import { SEED_BY_ID, type Product, type SeedVariant } from '../data/products';
+import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from './ProductImage';
 import { Photo } from './Photo';
+import { Select } from './Select';
 import { delay } from '../lib/motion';
 
 interface CatalogProps {
@@ -13,6 +16,10 @@ interface CatalogProps {
 }
 
 export function Catalog({ tinVariant, onTinVariantChange }: CatalogProps) {
+  const { byId } = useCatalog();
+  // The landing page features three launch products; fall back to their launch details if edited away.
+  const pick = (id: string) => byId[id] ?? SEED_BY_ID[id];
+  const tin = pick('grow-tin');
   return (
     <section id="shop" className="pb-28 pt-24 lg:pb-40 lg:pt-32">
       <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
@@ -21,49 +28,43 @@ export function Catalog({ tinVariant, onTinVariantChange }: CatalogProps) {
           <h2 data-reveal style={delay(100)} className="display mt-6 text-[40px] text-espresso sm:text-[54px]">
             Three quiet rituals <em className="font-normal text-pine">for the sill.</em>
           </h2>
+          <Link
+            to="/shop"
+            className="mt-8 inline-block text-[11px] font-medium uppercase tracking-[0.24em] text-espresso underline decoration-line underline-offset-[10px] transition hover:decoration-espresso"
+          >
+            View the full shop
+          </Link>
         </div>
 
         <div className="mt-20 divide-y divide-line border-y border-line lg:mt-24">
           <ProductRow
             index="01"
-            product={PRODUCTS['grow-tin']}
+            product={tin}
             variant={tinVariant}
             frame="arch"
             media={<Photo name="grow-tin" alt="The Grow Tin with coir coins and a basil seed packet" className="h-full w-full object-cover" />}
             picker={
-              <label className="block max-w-xs">
-                <span className="sr-only">Seed variant</span>
-                <span className="relative block">
-                  <select
-                    value={tinVariant}
-                    onChange={(e) => onTinVariantChange(e.target.value as SeedVariant)}
-                    className="w-full cursor-pointer appearance-none border-b border-line bg-transparent py-2.5 pr-8 font-serif text-[17px] italic text-espresso transition hover:border-espresso focus:border-espresso focus:outline-none"
-                  >
-                    {SEED_VARIANTS.map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-0 top-1/2 size-4 -translate-y-1/2 text-umber" />
-                </span>
-              </label>
+              <Select
+                className="max-w-xs"
+                value={tinVariant}
+                onChange={(v) => onTinVariantChange(v as SeedVariant)}
+                options={tin.variants}
+                ariaLabel="Seed variety"
+              />
             }
           />
           <ProductRow
             index="02"
-            product={PRODUCTS['kitchen-trio']}
-            variant={PRODUCTS['kitchen-trio'].fixedVariant!}
+            product={pick('kitchen-trio')}
+            variant={pick('kitchen-trio').variants[0]}
             frame="arch"
             reverse
-            media={
-              <div className="flex h-full items-center justify-center bg-butter px-10">
-                <TrioArt className="w-full max-w-[420px]" />
-              </div>
-            }
+            media={<ProductImage product={pick('kitchen-trio')} />}
           />
           <ProductRow
             index="03"
-            product={PRODUCTS['living-soil-kit']}
-            variant={PRODUCTS['living-soil-kit'].fixedVariant!}
+            product={pick('living-soil-kit')}
+            variant={pick('living-soil-kit').variants[0]}
             frame="arch"
             priceNote="makes 10 litres"
             media={<Photo name="coco-peat-pouch" alt="Expand-in-the-bag coco peat kraft pouch with bio-booster sachet" className="h-full w-full object-cover" />}
@@ -92,7 +93,7 @@ function ProductRow({ index, product, variant, media, frame, reverse, picker, pr
   const [open, setOpen] = useState(false);
 
   const onAdd = () => {
-    add(product.id, variant);
+    add(product.id, variant, { source: 'landing' });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1400);
   };
@@ -116,7 +117,9 @@ function ProductRow({ index, product, variant, media, frame, reverse, picker, pr
         </p>
 
         <h3 data-reveal style={delay(80)} className="display mt-6 text-[34px] text-espresso sm:text-[42px]">
-          {product.name}
+          <Link to={`/shop/${product.id}`} className="transition-colors hover:text-pine">
+            {product.name}
+          </Link>
         </h3>
         <p data-reveal style={delay(140)} className="mt-4 max-w-sm text-[15px] leading-[1.8] text-umber">
           {product.tagline}
