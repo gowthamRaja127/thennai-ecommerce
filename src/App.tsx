@@ -11,6 +11,7 @@ import { Journal } from './components/Journal';
 import { Newsletter } from './components/Newsletter';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
+import { KintsugiSeam, TornEdge } from './components/Motifs';
 import type { SeedVariant } from './data/products';
 
 export default function App() {
@@ -25,11 +26,15 @@ export default function App() {
         <ScrollStory />
         {/* <About /> */}
         <Catalog tinVariant={tinVariant} onTinVariantChange={setTinVariant} />
+        <div className="mx-auto max-w-[1360px] px-5 py-10 sm:px-8">
+          <KintsugiSeam className="h-6 w-full" />
+        </div>
         <Standards />
         <Testimonial />
         <Journal />
         <Newsletter />
       </main>
+      <TornEdge fill="var(--color-forest)" className="-mb-px" />
       <Footer />
       <CartDrawer />
     </>

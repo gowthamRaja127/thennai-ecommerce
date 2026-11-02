@@ -17,11 +17,17 @@ export function initMotion() {
     requestAnimationFrame(raf);
   }
 
+  // Chrome folds a target's own clip-path into its intersection, so an element masked to
+  // nothing (`data-reveal="mask"`) never reports as visible. Watch its parent instead.
+  const proxyFor = new Map<Element, Element[]>();
+  const watched = new WeakSet<Element>();
+
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
         if (e.isIntersecting) {
-          e.target.classList.add('is-in');
+          (proxyFor.get(e.target) ?? [e.target]).forEach((el) => el.classList.add('is-in'));
+          proxyFor.delete(e.target);
           io.unobserve(e.target);
         }
       }
@@ -29,7 +35,14 @@ export function initMotion() {
     { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
   );
 
-  const observe = (root: ParentNode) => root.querySelectorAll('[data-reveal]:not(.is-in)').forEach((el) => io.observe(el));
+  const observe = (root: ParentNode) =>
+    root.querySelectorAll('[data-reveal]:not(.is-in)').forEach((el) => {
+      if (watched.has(el)) return;
+      watched.add(el);
+      const target = el.getAttribute('data-reveal') === 'mask' && el.parentElement ? el.parentElement : el;
+      if (target !== el) proxyFor.set(target, [...(proxyFor.get(target) ?? []), el]);
+      io.observe(target);
+    });
   observe(document);
   new MutationObserver(() => observe(document)).observe(document.body, { childList: true, subtree: true });
 

@@ -9,21 +9,23 @@ const ITEMS = [
 
 export function Marquee() {
   const row = (
-    <ul className="flex shrink-0 items-center gap-12 pr-12" aria-hidden>
+    <ul className="flex shrink-0 items-center gap-14 pr-14" aria-hidden>
       {ITEMS.map((t) => (
-        <li key={t} className="flex items-center gap-12 whitespace-nowrap font-serif text-[22px] italic text-linen/90 sm:text-[26px]">
+        <li key={t} className="flex items-center gap-14 whitespace-nowrap font-serif text-[19px] font-normal italic text-umber sm:text-[21px]">
           {t}
-          <span className="text-[14px] not-italic text-kraft">✦</span>
+          <span className="pebble block size-1.5 bg-kraft/70" />
         </li>
       ))}
     </ul>
   );
 
   return (
-    <div className="relative overflow-hidden border-y border-white/5 bg-forest py-6" role="region" aria-label={ITEMS.join(', ')}>
-      <div className="flex w-max animate-[marquee_48s_linear_infinite] motion-reduce:animate-none">
-        {row}
-        {row}
+    <div className="mx-auto max-w-[1280px] px-6 sm:px-10" role="region" aria-label={ITEMS.join(', ')}>
+      <div className="overflow-hidden border-y border-line py-5 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+        <div className="flex w-max animate-[marquee_70s_linear_infinite] motion-reduce:animate-none">
+          {row}
+          {row}
+        </div>
       </div>
       <style>{`@keyframes marquee { to { transform: translateX(-50%) } }`}</style>
     </div>

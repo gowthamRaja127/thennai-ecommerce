@@ -140,7 +140,7 @@ export function CartDrawer() {
                     const p = PRODUCTS[line.productId];
                     return (
                       <li key={line.key} className="flex gap-4 rounded-2xl border border-line bg-white p-3.5">
-                        <div className={`size-20 shrink-0 overflow-hidden rounded-md bg-gradient-to-b from-[#F6EFE2] to-[#EDE2CF] ${line.productId === 'grow-tin' || line.productId === 'living-soil-kit' ? '' : 'p-1.5'}`}>
+                        <div className={`size-20 shrink-0 overflow-hidden rounded-md bg-gradient-to-b from-paper to-paper ${line.productId === 'grow-tin' || line.productId === 'living-soil-kit' ? '' : 'p-1.5'}`}>
                           <Thumb productId={line.productId} variant={line.variant} />
                         </div>
                         <div className="flex min-w-0 flex-1 flex-col">
@@ -179,7 +179,7 @@ export function CartDrawer() {
 
               {/* 1-click upsell */}
               {cart.lines.length > 0 && !hasRefill && (
-                <div className="mt-5 flex items-center gap-3.5 rounded-2xl border border-dashed border-kraft/60 bg-[#FBF3E8] p-3.5">
+                <div className="mt-5 flex items-center gap-3.5 rounded-2xl border border-kraft/60 bg-cream p-3.5">
                   <div className="h-12 w-16 shrink-0">
                     <CoinRefillArt className="h-full w-full" />
                   </div>
