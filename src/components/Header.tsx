@@ -43,12 +43,14 @@ export function Header() {
 
   return (
     <div className="sticky top-0 z-40">
+      {/* BANNER  uncomment to re-enable
       <div className="bg-forest px-4 py-2 text-center text-[13px] font-medium leading-snug tracking-[0.01em] text-linen/95">
         <span className="hidden md:inline">
           🌿 Handcrafted in Erode • Free Pan-India Doorstep Express Delivery on orders above ₹499 • 100% Germination Guarantee
         </span>
         <span className="md:hidden">🌿 Free Express Delivery above ₹499 • Handcrafted in Erode</span>
       </div>
+      */}
 
       <header className="border-b border-espresso/[0.07] bg-linen/90 backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex h-[68px] max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-8">
